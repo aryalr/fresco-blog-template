@@ -29,7 +29,12 @@
     "eslint-config-next": "16.0.7",
     "prisma": "^7.1.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
-  "type": "module"
+  "type": "module",
+
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  }
 }

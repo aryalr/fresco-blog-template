@@ -26,8 +26,8 @@ model Header {
 model About {
   id  Int @id @default(1)
   paragraph String
-  why String
-  why2 String
+  why Json
+  why2 Json
 }
 
 model Gallery {
