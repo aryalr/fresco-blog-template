@@ -13,12 +13,12 @@ export const About = (props) => {
             <div className="about-text">
               <h2>Tentang Kami</h2>
               <p>{props.data ? props.data.paragraph : "loading..."}</p>
-              <h3>Why Choose Us?</h3>
+              <h3>Kenapa Pilih FresCo?</h3>
               <div className="list-style">
                 <div className="col-lg-6 col-sm-6 col-xs-12">
                   <ul>
                     {props.data
-                      ? props.data.Why.map((d, i) => (
+                      ? props.data.Why?.map((d, i) => (
                           <li key={`${d}-${i}`}>{d}</li>
                         ))
                       : "loading"}
@@ -27,7 +27,7 @@ export const About = (props) => {
                 <div className="col-lg-6 col-sm-6 col-xs-12">
                   <ul>
                     {props.data
-                      ? props.data.Why2.map((d, i) => (
+                      ? props.data.Why2?.map((d, i) => (
                           <li key={`${d}-${i}`}> {d}</li>
                         ))
                       : "loading"}
