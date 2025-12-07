@@ -1,6 +1,6 @@
-// app/admin/page.tsx
 "use client";
 import { useState, useEffect, ChangeEvent } from 'react';
+import { useSession, signIn } from 'next-auth/react';
 
 interface ContentData {
   id?: number;
@@ -56,10 +56,18 @@ const SectionForm = ({ title, data, setData, onSave }: SectionFormProps) => {
 };
 
 export default function AdminPage() {
+  const { data: session, status } = useSession();
     const [header, setHeader] = useState<ContentData | null>(null);
     const [about, setAbout] = useState<ContentData | null>(null);
 
     useEffect(() => {
+        if (status === 'unauthenticated') {
+            signIn(); // Redirect ke halaman login jika belum login
+        }
+    }, [status]);
+
+    useEffect(() => {
+      if (status == 'authenticated') {
         const fetchContent = async () => {
             try {
                 const res = await fetch('/api/content');
@@ -71,7 +79,8 @@ export default function AdminPage() {
             }
         };
         fetchContent();
-    }, []);
+      }
+    }, [status]);
 
     const handleSave = async (section: string, data: ContentData | null) => {
         if (!data) return;
@@ -101,6 +110,10 @@ export default function AdminPage() {
             alert(`Error saving ${section}: ${errorMessage}`);
         }
     };
+
+    if (status !== 'authenticated') {
+            return <p>Loading or not authenticated...</p>;
+        }
 
     return (
         <div style={{ maxWidth: '800px', margin: '40px auto', fontFamily: 'sans-serif' }}>

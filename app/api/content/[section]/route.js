@@ -1,8 +1,14 @@
 import { NextResponse } from 'next/server';
 import {prisma} from '../../../lib/prisma'
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export async function PUT(request, {params}) {
   // TODO: Tambahkan pengecekan autentikasi disini
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
 
   const { section } = params;
   const data = await request.json();
