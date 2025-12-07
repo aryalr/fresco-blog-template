@@ -1,31 +1,34 @@
 import { NextResponse } from 'next/server';
-import {prisma} from '../../../lib/prisma'
+import {prisma} from '@/lib/prisma.ts'
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
-export async function PUT(request, {params}) {
+export async function PUT(request, context) {
   // TODO: Tambahkan pengecekan autentikasi disini
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const { section } = params;
+  const { section = '' } = context.params || {};
+  
   const data = await request.json();
 
   try {
     let updatedRecord;
-    switch (section) {
+    switch (section.toLowerCase()) {
       case 'header':
-        updatedRecord = await prisma.header.update({
+        updatedRecord = await prisma.header.upsert({
           where: { id: 1 },
-          data: { title: data.title, paragraph: data.paragraph },
+          update: { title: data.title, paragraph: data.paragraph },
+          create: { id: 1, title: data.title, paragraph: data.paragraph },
         });
         break;
       case 'about':
-        updatedRecord = await prisma.about.update({
+        updatedRecord = await prisma.about.upsert({
           where: { id: 1 },
-          data: { paragraph: data.paragraph },
+          update: { paragraph: data.paragraph },
+          create: { id: 1, paragraph: data.paragraph, why: [], why2: [] },
         });
         break;
       // Tambahkan case untuk section lain disini
@@ -35,7 +38,8 @@ export async function PUT(request, {params}) {
     return NextResponse.json(updatedRecord);
   } catch (error) {
     console.error(`Error updating ${section}:`, error);
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    return NextResponse.json({ message: `Internal Server Error: ${errorMessage}` }, { status: 500 });
   }
 
 }

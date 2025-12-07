@@ -86,13 +86,16 @@ export default function AdminPage() {
         if (!data) return;
 
         try {
-            const res = await fetch(`/api/content/${section}`, {
+            const res = await fetch(`/api/content?section=${section}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
             });
 
-            if (!res.ok) throw new Error(`Failed to save ${section}`);
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.message || `Failed to save ${section}`);
+            }
 
             alert(`${section} saved successfully!`);
 
