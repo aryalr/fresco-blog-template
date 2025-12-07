@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// Model untuk autentikasi admin
+model User {
+  id    String @id @default(cuid())
+  email String @unique
+  password String
+}
+
+model Header {
+  id    Int @id @default(1)
+  title String
+  paragraph String
+}
+
+model About {
+  id  Int @id @default(1)
+  paragraph String
+  why Json
+  why2 Json
+}
+
+model Gallery {
+  id Int @id @default(autoincrement())
+  title String
+  largeImage String
+  smallImage String
+}
+
+model Service {
+  id Int @id @default(autoincrement())
+  icon String
+  name String
+  text String
+}
+
+model Testimonial {
+  id Int @id @default(autoincrement())
+  img String
+  text String
+  name String
+}
+
+model Team {
+  id Int @id @default(autoincrement())
+  img String
+  name String
+  job String
+}

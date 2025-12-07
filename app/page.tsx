@@ -10,11 +10,24 @@ import { Gallery } from "./components/gallery";
 import { Testimonials } from "./components/testimonials";
 import { Team } from "./components/Team";
 import { Contact } from "./components/contact";
-import JsonData from "./data/data.json";
 import "./globals.css";
 
 const App = () => {
-  const [landingPageData] = useState(JsonData);
+  const [landingPageData, setLandingPageData] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/content");
+        const data = await response.json();
+        setLandingPageData(data);
+      } catch (err) {
+        console.error("Failed to fetch data:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     import("smooth-scroll").then((SmoothScroll) => {
@@ -25,17 +38,25 @@ const App = () => {
     });
   }, []);
 
+  if (!landingPageData) {
+      return (
+        <div className="flex justify-center items-center h-screen">
+          <p>Loading...</p>
+        </div>
+      );
+    }
+
   return (
     <div>
       <Navigation />
-      <Header data={landingPageData.Header} />
-      <Features data={landingPageData.Features} />
-      <About data={landingPageData.About} />
-      <Services data={landingPageData.Services} />
-      <Gallery data={landingPageData.Gallery} />
-      <Testimonials data={landingPageData.Testimonials} />
-      <Team data={landingPageData.Team} />
-      <Contact data={landingPageData.Contact} />
+      <Header data={landingPageData?.Header} />
+      <Features data={landingPageData?.Features} />
+      <About data={landingPageData?.About} />
+      <Services data={landingPageData?.Services} />
+      <Gallery data={landingPageData?.Gallery} />
+      <Testimonials data={landingPageData?.Testimonials} />
+      <Team data={landingPageData?.Team} />
+      <Contact data={{}} />
     </div>
   );
 };
