@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import {prisma} from '../../../lib/prisma'
 
 export async function PUT(request, {params}) {
-  // TODO: Tambahkan pengecekan autentikasi AudioDestinationNode
+  // TODO: Tambahkan pengecekan autentikasi disini
 
   const { section } = params;
   const data = await request.json();
