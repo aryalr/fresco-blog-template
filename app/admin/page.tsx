@@ -2,8 +2,6 @@
 "use client";
 import { useState, useEffect, ChangeEvent } from 'react';
 
-// 1. TIPE DATA YANG LEBIH SPESIFIK
-// Alih-alih 'any', kita definisikan bahwa nilainya bisa berupa string, number, atau undefined.
 interface ContentData {
   id?: number;
   [key: string]: string | number | undefined;
@@ -24,7 +22,6 @@ const SectionForm = ({ title, data, setData, onSave }: SectionFormProps) => {
 
         setData((prev) => {
             if (!prev) return null;
-            // Kita update state dengan aman tanpa 'any'
             return { ...prev, [name]: value };
         });
     };
@@ -41,7 +38,6 @@ const SectionForm = ({ title, data, setData, onSave }: SectionFormProps) => {
                         <input
                             type="text"
                             name={key}
-                            // Kita pastikan value selalu string atau number, atau fallback ke string kosong
                             value={data[key] ?? ''}
                             onChange={handleChange}
                             style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
@@ -67,7 +63,6 @@ export default function AdminPage() {
         const fetchContent = async () => {
             try {
                 const res = await fetch('/api/content');
-                // Kita memberitahu TS bahwa hasil json adalah object dengan key Header dan About
                 const data = await res.json() as { Header: ContentData; About: ContentData };
                 setHeader(data.Header);
                 setAbout(data.About);
@@ -92,8 +87,7 @@ export default function AdminPage() {
 
             alert(`${section} saved successfully!`);
 
-        // 2. ERROR HANDLING TANPA 'ANY'
-        // Gunakan 'unknown' lalu cek apakah itu instance dari Error
+        // 2. ERROR HANDLING
         } catch (error: unknown) {
             console.error(error);
             let errorMessage = "An unknown error occurred";
@@ -125,6 +119,9 @@ export default function AdminPage() {
                 setData={setAbout}
                 onSave={() => handleSave('about', about)}
             />
+
+            {/*TODO: Tambahkan section untuk update konten lainya disini*/}
+
         </div>
     );
 }
